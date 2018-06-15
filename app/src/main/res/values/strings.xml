@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">AndroidMediaUtil</string>
+
+    <string name="show_storage_info">Show Storage Info</string>
+
+    <string name="choose_file">Choose File</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="choose_video">Choose Video</string>
+    <string name="choose_audio">Choose Audio</string>
+
+    <string name="user_canceled">User canceled</string>
+    <string name="data_error">Data error</string>
+    <string name="pick_error">Pick file error.</string>
+</resources>
