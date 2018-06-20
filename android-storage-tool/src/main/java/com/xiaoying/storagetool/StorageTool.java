@@ -67,9 +67,9 @@ public class StorageTool {
         }
         try {
             @SuppressWarnings("JavaReflectionMemberAccess")
-            Method getMethod = StorageManager.class.getMethod("getVolumes", null);
+            Method getMethod = StorageManager.class.getMethod("getVolumes");
             @SuppressWarnings("ConfusingArgumentToVarargsMethod")
-            List<?> volumes = (List<?>) getMethod.invoke(sm, null);
+            List<?> volumes = (List<?>) getMethod.invoke(sm);
             VolumeInfo volumeInfo;
             synchronized (mVolumes) {
                 mVolumes.clear();
