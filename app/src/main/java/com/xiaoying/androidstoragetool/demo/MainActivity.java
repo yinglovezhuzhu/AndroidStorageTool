@@ -1,9 +1,15 @@
 package com.xiaoying.androidstoragetool.demo;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "Android-File-Util";
 
     private static final int RC_CHOOSE_FILE = 0x1000;
+    private static final int RC_REQUEST_PERMISSION = 0x1001;
 
     private static final int TYPE_FILE = 1;
     private static final int TYPE_IMAGE = 2;
@@ -34,9 +41,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         mTvMsg = findViewById(R.id.tv_msg);
-        mTvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
+//        mTvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         showStorageInfo();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String [] {Manifest.permission.READ_EXTERNAL_STORAGE, }, RC_REQUEST_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(RC_REQUEST_PERMISSION == requestCode) {
+            for(int result : grantResults) {
+                if(PackageManager.PERMISSION_DENIED == result) {
+                    finish();
+                }
+            }
+        }
     }
 
     @Override
@@ -100,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         List<VolumeInfo> volumeInfos = StorageTool.getInstance().getVolumes();
         int i = 0;
+        mTvMsg.setText("");
         for(VolumeInfo volumeInfo : volumeInfos) {
 //            if(!volumeInfo.isVisible()) {
 //                continue;
@@ -110,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mTvMsg.append(String.format("state: %s\n", getVolumeMountStateDesc(volumeInfo.getState())));
             mTvMsg.append(String.format("fs uuid: %s\n", volumeInfo.getFsUuid()));
             mTvMsg.append(String.format("path: %s\n", volumeInfo.getPath()));
+            mTvMsg.append(String.format("path exist: %s\n", new File(volumeInfo.getPath()).exists()));
             mTvMsg.append("=====================\\\n");
             i++;
         }
