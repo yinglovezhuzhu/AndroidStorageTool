@@ -7,17 +7,9 @@
     tools:context=".demo.MainActivity">
 
     <Button
-        android:id="@+id/btn_show_storage_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="onClick"
-        android:text="@string/show_storage_info"/>
-    <Button
         android:id="@+id/btn_choose_file"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/btn_show_storage_info"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/btn_choose_image"
         app:layout_constraintHorizontal_weight="1"
@@ -27,7 +19,6 @@
         android:id="@+id/btn_choose_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/btn_show_storage_info"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/btn_choose_file"
         app:layout_constraintHorizontal_weight="1"

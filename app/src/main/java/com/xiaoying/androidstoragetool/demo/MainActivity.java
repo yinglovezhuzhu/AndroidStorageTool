@@ -9,17 +9,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
 import com.xiaoying.androidstoragetool.R;
 import com.xiaoying.storagetool.StorageTool;
-import com.xiaoying.storagetool.VolumeInfo;
 
 import java.io.File;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mTvMsg = findViewById(R.id.tv_msg);
 //        mTvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
-
-        showStorageInfo();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             ActivityCompat.requestPermissions(MainActivity.this, new String [] {Manifest.permission.READ_EXTERNAL_STORAGE, }, RC_REQUEST_PERMISSION);
@@ -78,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return;
                     }
                     mTvMsg.setText(String.format("Uri: %s\n\n", uri.toString()));
-                    final String path = StorageTool.getInstance().parseUriToPath(MainActivity.this, uri);
+                    final String path = StorageTool.parseUriToPath(MainActivity.this, uri);
                     mTvMsg.append(String.format("Path: %s\n\n", path));
 
                     mTvMsg.append(String.format("File exist: %b\n\n", new File(path).exists()));
@@ -95,9 +89,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_show_storage_info:
-                showStorageInfo();
-                break;
             case R.id.btn_choose_file:
                 chooseFile(TYPE_FILE);
                 break;
@@ -112,31 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             default:
                 break;
-        }
-    }
-
-    private void showStorageInfo() {
-        if(null == mTvMsg) {
-            return;
-        }
-        StorageTool.getInstance().updateStorageInfo(MainActivity.this, true);
-
-        List<VolumeInfo> volumeInfos = StorageTool.getInstance().getVolumes();
-        int i = 0;
-        mTvMsg.setText("");
-        for(VolumeInfo volumeInfo : volumeInfos) {
-//            if(!volumeInfo.isVisible()) {
-//                continue;
-//            }
-            mTvMsg.append(String.format("Volume: %d\n", i));
-            mTvMsg.append(String.format("id: %s\n", volumeInfo.getId()));
-            mTvMsg.append(String.format("type: %s\n", getVolumeTypeDesc(volumeInfo.getType())));
-            mTvMsg.append(String.format("state: %s\n", getVolumeMountStateDesc(volumeInfo.getState())));
-            mTvMsg.append(String.format("fs uuid: %s\n", volumeInfo.getFsUuid()));
-            mTvMsg.append(String.format("path: %s\n", volumeInfo.getPath()));
-            mTvMsg.append(String.format("path exist: %s\n", new File(volumeInfo.getPath()).exists()));
-            mTvMsg.append("=====================\\\n");
-            i++;
         }
     }
 
@@ -162,61 +128,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(intent, RC_CHOOSE_FILE);
         } catch (Exception e) {
             mTvMsg.setText(R.string.pick_error);
-        }
-    }
-
-
-
-    public String getVolumeTypeDesc(int type) {
-        switch (type) {
-            case VolumeInfo.TYPE_PRIVATE:
-                return "TYPE_PRIVATE";
-            case VolumeInfo.TYPE_PUBLIC:
-                return "TYPE_PUBLIC";
-            case VolumeInfo.TYPE_EMULATED:
-                return "TYPE_EMULATED";
-            case VolumeInfo.TYPE_ASEC:
-                return "TYPE_ASEC";
-            case VolumeInfo.TYPE_OBB:
-                return "TYPE_OBB";
-            default:
-                return "UNKNOWN";
-        }
-    }
-
-    public String getVolumeMountStateDesc(int state) {
-        switch (state) {
-            case VolumeInfo.STATE_UNMOUNTED:
-                return "STATE_UNMOUNTED";
-            case VolumeInfo.STATE_CHECKING:
-                return "STATE_CHECKING";
-            case VolumeInfo.STATE_MOUNTED:
-                return "STATE_MOUNTED";
-            case VolumeInfo.STATE_MOUNTED_READ_ONLY:
-                return "STATE_MOUNTED_READ_ONLY";
-            case VolumeInfo.STATE_FORMATTING:
-                return "STATE_FORMATTING";
-            case VolumeInfo.STATE_EJECTING:
-                return "STATE_EJECTING";
-            case VolumeInfo.STATE_UNMOUNTABLE:
-                return "STATE_UNMOUNTABLE";
-            case VolumeInfo.STATE_REMOVED:
-                return "STATE_REMOVED";
-            case VolumeInfo.STATE_BAD_REMOVAL:
-                return "STATE_BAD_REMOVAL";
-            default:
-                return "UNKNOWN";
-        }
-    }
-
-    public String getVolumeMountFlagDesc(int flag) {
-        switch (flag) {
-            case VolumeInfo.MOUNT_FLAG_PRIMARY:
-                return "MOUNT_FLAG_PRIMARY";
-            case VolumeInfo.MOUNT_FLAG_VISIBLE:
-                return "MOUNT_FLAG_VISIBLE";
-            default:
-                return "UNKNOWN";
         }
     }
 }
