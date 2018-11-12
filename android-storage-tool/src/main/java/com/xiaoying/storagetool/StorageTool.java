@@ -80,8 +80,11 @@ public class StorageTool {
                             return new File(Environment.getExternalStorageDirectory(), relativePath).getPath();
                         } else {
                             // not primary storage, array[0] always is storage fs uuid.
-                            final File dir = new File(Environment.getExternalStorageDirectory().getParent(), type);
-                            return new File(dir, relativePath).getPath();
+                            // normally sdcard path is /storage/uuid/
+                            final File dir = new File(Environment.getExternalStorageDirectory().getParentFile().getParentFile(), type);
+                            final File file = new File(dir, relativePath);
+                            //
+                            return file.exists() ? file.getPath() : "";
                         }
                     } else if (isDownloadsDocument(uri)) {
                         final String id = DocumentsContract.getDocumentId(uri);
